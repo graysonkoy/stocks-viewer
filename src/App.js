@@ -6,7 +6,9 @@ import { StocksNavbar } from "./components/StocksNavbar"
 import { Home } from "./pages/Home"
 import { StocksList } from "./pages/StocksList"
 import { StockViewer } from "./pages/StockViewer"
-import { Login } from "./pages/Login"
+import { RegisterPage } from "./pages/Register"
+import { LoginPage } from "./pages/Login"
+import { LogoutPage } from "./pages/Logout"
 
 import "./App.css"
 
@@ -21,7 +23,9 @@ function App() {
             <Route exact path="/" component={Home}/>
             <Route exact path="/stocks" component={StocksList}/>
             <Route exact path="/stocks/:symbol" component={StockViewer}/>
-            <Route exact path="/login" component={Login}/>
+            <Route exact path="/register" component={RegisterPage}/>
+            <Route exact path="/login" component={LoginPage}/>
+            <Route exact path="/logout" component={LogoutPage}/>
           </Switch>
         </div>
       </div>

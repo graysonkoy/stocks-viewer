@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { Link as RouteLink } from "react-router-dom"
-
+import React, { useState, useEffect } from "react";
+import { Link as RouteLink, useLocation } from "react-router-dom"
 import {
     Container,
     Collapse,
@@ -17,14 +16,22 @@ import {
     NavbarText
 } from 'reactstrap';
 
+import { IsLoggedIn } from "../api/api"
+
 function NavbarUser(props) {
-    let isLoggedIn = false; // todo actually work
+    let [loggedIn, setLoggedIn] = useState(IsLoggedIn());
+    let location = useLocation();
+
+    // Check login status every time the page changes
+    useEffect(() => {
+        setLoggedIn(IsLoggedIn());
+    }, [location]);
     
-    if (!isLoggedIn) {
+    if (!loggedIn) {
         return (
             <Container>
                 <NavItem>
-                    <NavLink tag={RouteLink} exact to="/">Register</NavLink>
+                    <NavLink tag={RouteLink} exact to="/register">Register</NavLink>
                 </NavItem>
 
                 <NavItem>

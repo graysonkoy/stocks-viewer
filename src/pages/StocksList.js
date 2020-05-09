@@ -88,10 +88,7 @@ export function StocksList(props) {
 			{loading ?
 				<h4>Loading stocks...</h4>
 				: 
-				error ? error : <StockTable stocks={stocks} clickedRow={data => {
-					const symbol = data.symbol;
-					history.push(`/stocks/${symbol}`);
-				}}/>
+				error ? error : <StockTable stocks={stocks} clickedRow={data => history.push(`/stocks/${data.symbol}`)}/>
 			}			
 		</div>
 	);

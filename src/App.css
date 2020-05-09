@@ -4,7 +4,6 @@
 
 body {
 	background-color: #000;
-	min-height: 100%;
 }
 
 .center {
@@ -15,4 +14,8 @@ body {
 
 .ag-row {
 	cursor: pointer;
+}
+
+.register-form, .login-form {
+	width: 350px;
 }

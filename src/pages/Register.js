@@ -2,19 +2,25 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom"
 import { Container, Form, FormGroup, Label, Input, Button, Card, CardBody, CardTitle, CardText, Alert } from "reactstrap"
 
-import { Login } from "../api/api"
+import { Login, Register } from "../api/api"
 
-function LoginForm(props) {
+function RegisterForm(props) {
     let [email, setEmail] = useState("");
     let [password, setPassword] = useState("");
     let [error, setError] = useState(null);
     let [redirect, setRedirect] = useState(false);
     let history = useHistory();
 
-    const tryLogin = (email, password) => {
-        Login(email, password)
+    const tryRegister = (email, password) => {
+        Register(email, password)
         .then(data => {
-            setRedirect(true);
+            if (data.success) {
+                // Try to log in the newly created user
+                Login(email, password)
+                .then(loginData => {
+                    setRedirect(true);
+                });
+            }
         })
         .catch(err => {
             setError(err);
@@ -27,7 +33,7 @@ function LoginForm(props) {
 
     return (
         <div className="center">
-            <Form className="login-form">
+            <Form className="register-form">
                 <Card>
                     <CardBody>
                         <CardText>
@@ -35,22 +41,22 @@ function LoginForm(props) {
 
                             <FormGroup>
                                 <Label for="email">Email</Label>
-                                <Input id="email" name="email" type="email" placeholder="Enter your email"
+                                <Input id="email" name="email" type="email" placeholder="Enter a email"
                                     value={email} onChange={e => setEmail(e.target.value)}/>
                             </FormGroup>
                             
                             <FormGroup>
                                 <Label for="password">Password</Label>
-                                <Input id="password" name="password" type="password" placeholder="Enter your password"
+                                <Input id="password" name="password" type="password" placeholder="Enter a password"
                                     value={password} onChange={e => setPassword(e.target.value)}/>
                             </FormGroup>
 
                             <Button className="btn-block" type="Button" color="primary"
-                                 onClick={e => tryLogin(email, password)}>Log in</Button>
+                                 onClick={e => tryRegister(email, password)}>Register</Button>
 
                             <hr/>
                             
-                            <Link exact to="/register">Don't have an account?</Link>
+                            <Link exact to="/login">Already have an account?</Link>
                         </CardText>
                     </CardBody>
                 </Card>
@@ -59,14 +65,14 @@ function LoginForm(props) {
     );
 }
 
-export function LoginPage(props) {
+export function RegisterPage(props) {
     return (
         <div>
-            <h1>Login</h1>
+            <h1>Register</h1>
 
             <br/>
-
-            <LoginForm/>
+            
+            <RegisterForm/>
         </div>
-    )
+    );
 }

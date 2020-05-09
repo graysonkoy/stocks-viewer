@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link as RouteLink } from "react-router-dom"
-
 import { Jumbotron, Button } from "reactstrap"
 
 export function Home(props) {
