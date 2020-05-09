@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom"
-import { Container, Form, FormGroup, Label, Input, Button, Card, CardBody, CardTitle, CardText, Alert } from "reactstrap"
+import { Form, FormGroup, Label, Input, Button, Card, CardBody, CardText, Alert } from "reactstrap"
 
 import { Login, Register } from "../api/api"
 
@@ -21,6 +21,8 @@ function RegisterForm(props) {
                     setRedirect(true);
                 });
             }
+            
+            setError(null);
         })
         .catch(err => {
             setError(err);
@@ -40,13 +42,13 @@ function RegisterForm(props) {
                             {error ? <Alert color="danger">{error}</Alert> : ""}
 
                             <FormGroup>
-                                <Label for="email">Email</Label>
+                                <Label htmlFor="email">Email</Label>
                                 <Input id="email" name="email" type="email" placeholder="Enter a email"
                                     value={email} onChange={e => setEmail(e.target.value)}/>
                             </FormGroup>
                             
                             <FormGroup>
-                                <Label for="password">Password</Label>
+                                <Label htmlFor="password">Password</Label>
                                 <Input id="password" name="password" type="password" placeholder="Enter a password"
                                     value={password} onChange={e => setPassword(e.target.value)}/>
                             </FormGroup>
@@ -56,7 +58,7 @@ function RegisterForm(props) {
 
                             <hr/>
                             
-                            <Link exact to="/login">Already have an account?</Link>
+                            <Link to="/login">Already have an account?</Link>
                         </CardText>
                     </CardBody>
                 </Card>

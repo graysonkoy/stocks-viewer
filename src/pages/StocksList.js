@@ -5,7 +5,7 @@ import { AgGridReact } from "ag-grid-react"
 import { GetStocks, GetIndustries } from "../api/api"
 
 import "ag-grid-community/dist/styles/ag-grid.css"
-import "ag-grid-community/dist/styles/ag-theme-balham-dark.css"
+import "ag-grid-community/dist/styles/ag-theme-material.css"
 
 // Create table of stocks
 function StockTable(props) {
@@ -17,7 +17,7 @@ function StockTable(props) {
 
 	return (
 		<div className="center">
-			<div className="ag-theme-balham-dark" style={{
+			<div className="ag-theme-material" style={{
 				height: "500px",
 				width: "570px"
 			}}>
@@ -45,7 +45,7 @@ function IndustrySelector(props) {
 	
 	return (
 		<div>
-			<label for="industry-selector">Filter by industry:&nbsp;</label>
+			<label htmlFor="industry-selector">Filter by industry:&nbsp;</label>
 			<select id="industry-selector" onChange={e => props.onChange(e.target.value)}>
 				<option value="">All Industries</option>
 				{industries.map(industry => {
@@ -67,6 +67,8 @@ export function StocksList(props) {
 		GetStocks(industry)
 		.then(stocks => {
 			setStocks(stocks);
+			
+			setError(null);
 			setLoading(false);
 		})
 		.catch(err => {

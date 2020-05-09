@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom"
-import { Container, Form, FormGroup, Label, Input, Button, Card, CardBody, CardTitle, CardText, Alert } from "reactstrap"
+import { Form, FormGroup, Label, Input, Button, Card, CardBody, CardText, Alert } from "reactstrap"
 
 import { Login } from "../api/api"
 
@@ -15,6 +15,8 @@ function LoginForm(props) {
         Login(email, password)
         .then(data => {
             setRedirect(true);
+
+            setError(null);
         })
         .catch(err => {
             setError(err);
@@ -34,13 +36,13 @@ function LoginForm(props) {
                             {error ? <Alert color="danger">{error}</Alert> : ""}
 
                             <FormGroup>
-                                <Label for="email">Email</Label>
+                                <Label htmlFor="email">Email</Label>
                                 <Input id="email" name="email" type="email" placeholder="Enter your email"
                                     value={email} onChange={e => setEmail(e.target.value)}/>
                             </FormGroup>
                             
                             <FormGroup>
-                                <Label for="password">Password</Label>
+                                <Label htmlFor="password">Password</Label>
                                 <Input id="password" name="password" type="password" placeholder="Enter your password"
                                     value={password} onChange={e => setPassword(e.target.value)}/>
                             </FormGroup>
@@ -50,7 +52,7 @@ function LoginForm(props) {
 
                             <hr/>
                             
-                            <Link exact to="/register">Don't have an account?</Link>
+                            <Link to="/register">Don't have an account?</Link>
                         </CardText>
                     </CardBody>
                 </Card>

@@ -1,11 +1,10 @@
 import jwt from "jsonwebtoken"
-import { useHistory } from "react-router-dom"
 
 const BASE_URL = "http://131.181.190.87:3000"
 
 // Get list of stocks
 export function GetStocks(industry) {
-	return fetch(`${BASE_URL}/stocks/symbols${ industry != "" ? `?industry=${industry}` : "" }`)
+	return fetch(`${BASE_URL}/stocks/symbols${ industry !== "" ? `?industry=${industry}` : "" }`)
 	.then(resp => resp.json())
 	.then(json => {
 		// Check if there was an error
@@ -44,10 +43,47 @@ export function GetLatestStockData(symbol) {
 			throw json.message;
 		}
 
-		let data = json;
-		data.date = new Date(data.timestamp).toLocaleDateString(); // Nicely format date
+		// Get date
+		json.date = new Date(json.timestamp).toLocaleDateString();
 
-		return data;
+		return json;
+	})
+}
+
+// Get history for a given stock
+export function GetStockHistory(symbol, from, to) {
+	let token = localStorage.getItem("token");
+
+	let url = new URL(`${BASE_URL}/stocks/authed/${symbol}`);
+
+	if (from) url.searchParams.append("from", from);
+	if (to) url.searchParams.append("to", to);
+
+	return fetch(url, {
+		headers: new Headers({
+			"Authorization": `Bearer ${token}`,
+			"Content-Type": "application/json"
+		}),
+	})
+	.then(resp => resp.json())
+	.then(json => {
+		// Check if there was an error
+		if (json.error) {
+			throw json.message;
+		}
+
+		let results = json;
+
+		// Turn the results into an array even if it's just one result
+		if (!Array.isArray(results))
+			results = [results];
+
+		// Get dates for each result
+		for (let result of results) {
+			result.date = new Date(result.timestamp).toLocaleDateString();
+		}
+
+		return results;
 	})
 }
 

@@ -12,8 +12,7 @@ import {
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
-    DropdownItem,
-    NavbarText
+    DropdownItem
 } from 'reactstrap';
 
 import { IsLoggedIn } from "../api/api"
@@ -31,11 +30,11 @@ function NavbarUser(props) {
         return (
             <Container>
                 <NavItem>
-                    <NavLink tag={RouteLink} exact to="/register">Register</NavLink>
+                    <NavLink tag={RouteLink} to="/register">Register</NavLink>
                 </NavItem>
 
                 <NavItem>
-                    <NavLink tag={RouteLink} exact to="/login">Login</NavLink>
+                    <NavLink tag={RouteLink} to="/login">Login</NavLink>
                 </NavItem>
             </Container>
         )
@@ -45,7 +44,7 @@ function NavbarUser(props) {
                 <DropdownToggle nav caret>User</DropdownToggle>
                 <DropdownMenu right>
                     <DropdownItem>
-                        <NavLink tag={RouteLink} exact to="/logout">Log out</NavLink>
+                        <NavLink tag={RouteLink} to="/logout">Log out</NavLink>
                     </DropdownItem>
                 </DropdownMenu>
             </UncontrolledDropdown>
@@ -60,15 +59,15 @@ export function StocksNavbar(props) {
   
     return (    
         <Navbar color="light" light expand="md">
-            <NavbarBrand tag={RouteLink} exact to="/">Stocks Viewer</NavbarBrand>
+            <NavbarBrand tag={RouteLink} to="/">Stocks Viewer</NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={navbarOpen} navbar>
                 <Nav className="mr-auto" navbar>
                     <NavItem>
-                        <NavLink tag={RouteLink} exact to="/">Home</NavLink>
+                        <NavLink tag={RouteLink} to="/">Home</NavLink>
                     </NavItem>
                     <NavItem>
-                        <NavLink tag={RouteLink} exact to="/stocks">Stocks</NavLink>
+                        <NavLink tag={RouteLink} to="/stocks">Stocks</NavLink>
                     </NavItem>
 
                     <NavbarUser/>
