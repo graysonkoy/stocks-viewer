@@ -1,0 +1,18 @@
+.App {
+	text-align: center;
+}
+
+body {
+	background-color: #000;
+	min-height: 100%;
+}
+
+.center {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.ag-row {
+	cursor: pointer;
+}
