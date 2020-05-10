@@ -106,7 +106,7 @@ export function StocksList(props) {
 	return (
 		<div>
 			<h1>Stocks list</h1>
-			<p class="text-muted">Click on a stock to view pricing data</p>
+			<p className="text-muted">Click on a stock to view pricing data</p>
 			
 			<br/>
 

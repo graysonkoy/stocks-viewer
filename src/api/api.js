@@ -1,5 +1,3 @@
-import jwt from "jsonwebtoken"
-
 const BASE_URL = "http://131.181.190.87:3000"
 
 // Get list of stocks
@@ -150,17 +148,5 @@ export function IsLoggedIn() {
 		return false;
 	}
 
-	// Get token data
-	let tokenData = jwt.decode(token);
-
-	let stillValid = true;
-
-	/*
-	// Check if the token has expired
-	if (Date.now() >= tokenData.exp * 1000) {
-		stillValid = false;
-	}
-	*/
-
-	return stillValid;
+	return true;
 }

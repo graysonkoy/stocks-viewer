@@ -1,6 +1,6 @@
 import React from "react";
 import { Link as RouteLink } from "react-router-dom"
-import { Jumbotron, Button, Media } from "reactstrap"
+import { Button, Media } from "reactstrap"
 
 export function Home(props) {
 	return (

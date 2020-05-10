@@ -57,7 +57,7 @@ function StockDataGraph(props) {
 		let data = props.data[index];
 		let date = data.date;
 
-		if (date == props.selectedDate) {
+		if (date === props.selectedDate) {
 			return 10;
 		} else {
 			return 2;
@@ -162,8 +162,8 @@ export function StockViewer(props) {
 
 	return (
 		<div style={{paddingBottom: "25px"}}>			
-			<h1>{stockSymbol}{stockData.length != 0 && stockData[0].name ? `- ${stockData[0].name}` : ""}</h1>
-			<p class="text-muted">Pricing data</p>
+			<h1>{stockSymbol}{stockData.length !== 0 && stockData[0].name ? `- ${stockData[0].name}` : ""}</h1>
+			<p className="text-muted">Pricing data</p>
 
 			<Link to="/stocks">Back to stock list</Link>
 
