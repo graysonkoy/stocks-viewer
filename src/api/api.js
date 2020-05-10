@@ -155,10 +155,12 @@ export function IsLoggedIn() {
 
 	let stillValid = true;
 
+	/*
 	// Check if the token has expired
 	if (Date.now() >= tokenData.exp * 1000) {
 		stillValid = false;
 	}
+	*/
 
 	return stillValid;
 }

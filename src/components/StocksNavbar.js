@@ -28,7 +28,7 @@ function NavbarUser(props) {
     
     if (!loggedIn) {
         return (
-            <Container>
+            <React.Fragment>
                 <NavItem>
                     <NavLink tag={RouteLink} to="/register">Register</NavLink>
                 </NavItem>
@@ -36,7 +36,7 @@ function NavbarUser(props) {
                 <NavItem>
                     <NavLink tag={RouteLink} to="/login">Login</NavLink>
                 </NavItem>
-            </Container>
+            </React.Fragment>
         )
     } else {
         return (
@@ -58,7 +58,7 @@ export function StocksNavbar(props) {
     const toggle = () => setNavbarOpen(!navbarOpen);
   
     return (    
-        <Navbar color="light" light expand="md">
+        <Navbar color="transparent" light expand="md">
             <NavbarBrand tag={RouteLink} to="/">Stocks Viewer</NavbarBrand>
             <NavbarToggler onClick={toggle} />
             <Collapse isOpen={navbarOpen} navbar>

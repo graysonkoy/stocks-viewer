@@ -8,23 +8,23 @@ function LoginForm(props) {
     let [email, setEmail] = useState("");
     let [password, setPassword] = useState("");
     let [error, setError] = useState(null);
-    let [redirect, setRedirect] = useState(false);
     let history = useHistory();
 
     const tryLogin = (email, password) => {
         Login(email, password)
         .then(data => {
-            setRedirect(true);
+            history.push("/stocks");
 
             setError(null);
         })
         .catch(err => {
-            setError(err);
-        })
-    }
+            let errorMessage = err;
+            if (errorMessage.message) { // If it's an object, just get the error message
+                errorMessage = "Error: " + errorMessage.message;
+            }
 
-    if (redirect) {
-        history.push(`/stocks`);
+            setError(errorMessage);
+        })
     }
 
     return (

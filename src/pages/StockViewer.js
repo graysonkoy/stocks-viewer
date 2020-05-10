@@ -11,25 +11,26 @@ import "ag-grid-community/dist/styles/ag-theme-material.css"
 // Create table of stocks
 function StockDataTable(props) {
 	const columns = [
-		{ headerName: "Date", field: "date", sortable: true, width: 120 },
-		{ headerName: "Open", field: "open", sortable: true, width: 100 },
-		{ headerName: "High", field: "high", sortable: true, width: 100 },
-		{ headerName: "Low", field: "low", sortable: true, width: 100 },
-		{ headerName: "Close", field: "close", sortable: true, width: 100 },
-		{ headerName: "Volumes", field: "volumes", sortable: true, width: 100 },
+		{ headerName: "Date", field: "date", sortable: true, filter: true, flex: 1.3 },
+		{ headerName: "Open", field: "open", sortable: true, filter: "number", flex: 1 },
+		{ headerName: "High", field: "high", sortable: true, filter: "number", flex: 1 },
+		{ headerName: "Low", field: "low", sortable: true, filter: "number", flex: 1 },
+		{ headerName: "Close", field: "close", sortable: true, filter: "number", flex: 1 },
+		{ headerName: "Volumes", field: "volumes", sortable: true, filter: "number", flex: 1.3 },
 	];
 
 	return (
 		<div className="center">
 			<div className="ag-theme-material" style={{
 				height: "500px",
-				width: "640px"
+				width: "750px"
 			}}>
 				<AgGridReact
-					cellClicked={e => {console.log("clicked cell", e)}}
 					columnDefs={columns}
 					rowData={props.data}
 					pagination={true}
+					rowSelection={"single"}
+					onRowClicked={e => props.clickedRow(e.data)}
 				/>
 			</div>
 		</div>
@@ -49,6 +50,18 @@ function StockDataGraph(props) {
 				data: props.data.map(historyData => historyData.close)
 			}
 		]
+	}
+
+	const customRadius = ctx => {
+		let index = ctx.dataIndex;
+		let data = props.data[index];
+		let date = data.date;
+
+		if (date == props.selectedDate) {
+			return 10;
+		} else {
+			return 2;
+		}
 	}
 
 	return (
@@ -71,6 +84,12 @@ function StockDataGraph(props) {
 							}
 						}],
 					},
+					elements: {
+						point: {
+							radius : customRadius,
+							display: true
+						}
+					}
 				}}/>
 		</div>
 	);
@@ -83,7 +102,7 @@ function RangeSelector(props) {
 			<input id="date-from" name="date-from" type="date"
 				onChange={e => props.setFrom(e.target.value)}/>
 			&nbsp;
-			<label htmlFor="date-to">To:&nbsp;</label>
+			<label htmlFor="date-to">to:&nbsp;</label>
 			<input id="date-to" name="date-to" type="date"
 				onChange={e => props.setTo(e.target.value)}/>
 		</div>
@@ -98,6 +117,8 @@ export function StockViewer(props) {
 	let [from, setFrom] = useState(null);
 	let [to, setTo] = useState(null);
 
+	let [selectedDate, setSelectedDate] = useState(null);
+
 	const loggedIn = IsLoggedIn();
 	const stockSymbol = props.match.params.symbol;
 
@@ -111,7 +132,12 @@ export function StockViewer(props) {
 				setLoading(false);
 			})
 			.catch(err => {
-				setError(err);
+				let errorMessage = err;
+				if (errorMessage.message) { // If it's an object, just get the error message
+					errorMessage = "Error: " + errorMessage.message;
+				}
+
+				setError(errorMessage);
 				setLoading(false);
 			});
 		} else {
@@ -123,24 +149,32 @@ export function StockViewer(props) {
 				setLoading(false);
 			})
 			.catch(err => {
-				setError(err);
+	            let errorMessage = err;
+	            if (errorMessage.message) { // If it's an object, just get the error message
+	                errorMessage = "Error: " + errorMessage.message;
+	            }
+
+	            setError(errorMessage);
 				setLoading(false);
 			});
 		}
 	}, [loggedIn, stockSymbol, from, to]);
 
 	return (
-		<div>
+		<div style={{paddingBottom: "25px"}}>			
 			<h1>{stockSymbol}{stockData.length != 0 && stockData[0].name ? `- ${stockData[0].name}` : ""}</h1>
+			<p class="text-muted">Pricing data</p>
 
-			<br/>
+			<Link to="/stocks">Back to stock list</Link>
+
+			<br/><br/>
 
 			{loggedIn ?
 				<React.Fragment>
 					<RangeSelector setFrom={date => setFrom(date)} setTo={date => setTo(date)}/>
 					<br/>
 				</React.Fragment>
-			: 
+				: 
 				<React.Fragment>
 					<Link to="/login">Log in to view history data</Link>
 					<br/><br/>
@@ -150,11 +184,13 @@ export function StockViewer(props) {
 			{loading ?
 				<h4>Loading stock data...</h4>
 				: 
-				error ? error : 
-				<React.Fragment>
-					<StockDataTable data={stockData}/>
-					{stockData.length > 1 ? <StockDataGraph data={stockData}/> : null}
-				</React.Fragment>
+				error ?
+					<p>{error}</p>
+					: 
+					<React.Fragment>
+						<StockDataTable data={stockData} clickedRow={data => setSelectedDate(data.date)}/>
+						{stockData.length > 1 ? <StockDataGraph data={stockData} selectedDate={selectedDate}/> : null}
+					</React.Fragment>
 			}
 		</div>
 	);

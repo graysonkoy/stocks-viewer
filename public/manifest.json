@@ -1,0 +1,9 @@
+{
+  "name": "Stocks Viewer",
+  "short_name": "Stocks",
+  "theme_color": "#9af5ff",
+  "background_color": "#ffffff",
+  "display": "browser",
+  "scope": "/",
+  "start_url": "/"
+}
