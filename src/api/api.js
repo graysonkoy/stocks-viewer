@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken"
+
 const BASE_URL = "http://131.181.190.87:3000"
 
 // Get list of stocks
@@ -7,7 +9,7 @@ export function GetStocks(industry) {
 	.then(json => {
 		// Check if there was an error
 		if (json.error) {
-			throw json.message;
+			throw json;
 		}
 
 		// Otherwise it"s fine, return the data
@@ -22,7 +24,7 @@ export function GetIndustries() {
 	.then(json => {
 		// Check if there was an error
 		if (json.error) {
-			throw json.message;
+			throw json;
 		}
 
 		let industries = [...new Set(json.map(stock => stock.industry))];
@@ -38,7 +40,7 @@ export function GetLatestStockData(symbol) {
 	.then(json => {
 		// Check if there was an error
 		if (json.error) {
-			throw json.message;
+			throw json;
 		}
 
 		// Get date
@@ -67,7 +69,7 @@ export function GetStockHistory(symbol, from, to) {
 	.then(json => {
 		// Check if there was an error
 		if (json.error) {
-			throw json.message;
+			throw json;
 		}
 
 		let results = json;
@@ -101,7 +103,7 @@ export function Login(email, password) {
 	.then(json => {
 		// Check if there was an error
 		if (json.error) {
-			throw json.message;
+			throw json;
 		}
 
 		// We logged in, store the token in localstorage
@@ -127,7 +129,7 @@ export function Register(email, password) {
 	.then(json => {
 		// Check if there was an error
 		if (json.error) {
-			throw json.message;
+			throw json;
 		}
 
 		return json;
@@ -148,5 +150,13 @@ export function IsLoggedIn() {
 		return false;
 	}
 
-	return true;
+	let tokenData = jwt.decode(token);
+
+	// Check if the token is still valid
+	let currentDate = new Date();
+	let tokenDate = new Date().setUTCSeconds(tokenData.exp);
+
+	let expired = tokenDate <= currentDate;
+
+	return !expired;
 }

@@ -98,7 +98,9 @@ export function StocksList(props) {
 			setLoading(false);
 		})
 		.catch(err => {
-			setError("Failed to retrieve stocks.");
+            let errorMessage = "Error: " + err.message;
+
+            setError(errorMessage);
 			setLoading(false);
 		});
 	}, [industry]);

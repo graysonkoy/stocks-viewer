@@ -24,10 +24,7 @@ function RegisterForm(props) {
             setError(null);
         })
         .catch(err => {
-            let errorMessage = err;
-            if (errorMessage.message) { // If it's an object, just get the error message
-                errorMessage = "Error: " + errorMessage.message;
-            }
+            let errorMessage = "Error: " + err.message;
 
             setError(errorMessage);
         })

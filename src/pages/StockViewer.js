@@ -132,12 +132,9 @@ export function StockViewer(props) {
 				setLoading(false);
 			})
 			.catch(err => {
-				let errorMessage = err;
-				if (errorMessage.message) { // If it's an object, just get the error message
-					errorMessage = "Error: " + errorMessage.message;
-				}
+	            let errorMessage = "Error: " + err.message;
 
-				setError(errorMessage);
+	            setError(errorMessage);
 				setLoading(false);
 			});
 		} else {
@@ -149,10 +146,7 @@ export function StockViewer(props) {
 				setLoading(false);
 			})
 			.catch(err => {
-	            let errorMessage = err;
-	            if (errorMessage.message) { // If it's an object, just get the error message
-	                errorMessage = "Error: " + errorMessage.message;
-	            }
+	            let errorMessage = "Error: " + err.message;
 
 	            setError(errorMessage);
 				setLoading(false);
