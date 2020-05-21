@@ -153,10 +153,8 @@ export function IsLoggedIn() {
 	let tokenData = jwt.decode(token);
 
 	// Check if the token is still valid
-	let currentDate = new Date();
-	let tokenDate = new Date().setUTCSeconds(tokenData.exp);
+	let expired = Date.now() >= tokenData.exp * 1000;
 
-	let expired = tokenDate <= currentDate;
-
-	return !expired;
+	let valid = !expired;
+	return valid;
 }

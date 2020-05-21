@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom"
 import { AgGridReact } from "ag-grid-react"
 import { Line } from "react-chartjs-2";
+import { Button } from "reactstrap"
 
 import { IsLoggedIn, GetStockHistory, GetLatestStockData } from "../api/api"
 
@@ -75,12 +76,24 @@ function StockDataGraph(props) {
 					},
 					scales: {
 						xAxes: [{
+							scaleLabel: {
+								display: true,
+								labelString: "Date"
+							},
 							gridLines: {
 								display: false // hide vertical grid lines
 							},
 							type: "time",
 							time: {
-								unit: "month"
+								unit: "day"
+							}
+						}],
+					},
+					scales: {
+						yAxes: [{
+							scaleLabel: {
+								display: true,
+								labelString: "Closing price"
 							}
 						}],
 					},
@@ -95,7 +108,66 @@ function StockDataGraph(props) {
 	);
 }
 
-function RangeSelector(props) {
+function StockDataVisual(props) {
+	let [latestData, setLatestData] = useState({});
+
+	useEffect(() => {
+		GetLatestStockData(props.symbol)
+		.then(data => {
+			setLatestData(data);
+		})
+	}, []);
+
+	let change, changePercent;
+	if (latestData.open && latestData.close) {
+		change = latestData.close - latestData.open;
+		changePercent = (change / latestData.close) * 100;
+	}
+
+	return (
+		<div className="d-flex justify-content-center">
+			<div className="stock-visual">
+				
+			{!latestData.name ?
+				<h2>{props.symbol}</h2>
+				:
+				<React.Fragment> 
+					<h2>{latestData.symbol} - {latestData.name}</h2>
+					<h6 className="text-muted">{latestData.industry}</h6>
+					
+					<hr/>
+
+					<div className="row">
+						<div className="col text-left">
+							<small className="text-muted">Open:</small><br/>
+							<div className="font-weight-bold">{latestData.open}</div>
+						</div>
+
+						<div className="col text-center">
+							<small className="text-muted">Closing price:</small><br/>
+							<h3 className="mb-0">{latestData.close}</h3>
+							<div className={change >= 0 ? "text-success" : "text-danger"}>{change.toFixed(2)} ({changePercent.toFixed(2)}%)</div>
+						</div>
+
+						<div className="col text-right">
+							<small className="text-muted">Day's range:</small><br/>
+							<div className="font-weight-bold">{latestData.low} - {latestData.high}</div>
+						</div>
+					</div>
+
+					<div><small className="text-muted">Data from {latestData.date}</small></div>
+					
+					<hr/>
+				</React.Fragment>
+			}
+			</div>
+		</div>
+	)
+}
+
+function DateSelector(props) {
+	let [selectedButton, setSelectedButton] = useState(0);
+
 	return (
 		<div>
 			<label htmlFor="date-from">From:&nbsp;</label>
@@ -155,36 +227,34 @@ export function StockViewer(props) {
 	}, [loggedIn, stockSymbol, from, to]);
 
 	return (
-		<div style={{paddingBottom: "25px"}}>			
-			<h1>{stockSymbol}{stockData.length !== 0 && stockData[0].name ? `- ${stockData[0].name}` : ""}</h1>
-			<p className="text-muted">Pricing data</p>
-
-			<Link to="/stocks">Back to stock list</Link>
-
-			<br/><br/>
-
-			{loggedIn ?
-				<React.Fragment>
-					<RangeSelector setFrom={date => setFrom(date)} setTo={date => setTo(date)}/>
-					<br/>
-				</React.Fragment>
-				: 
-				<React.Fragment>
-					<Link to="/login">Log in to view history data</Link>
-					<br/><br/>
-				</React.Fragment>
-			}
+		<div style={{paddingBottom: "25px"}}>
+			<StockDataVisual symbol={stockSymbol}/>
 
 			{loading ?
 				<h4>Loading stock data...</h4>
 				: 
-				error ?
-					<p>{error}</p>
-					: 
-					<React.Fragment>
-						<StockDataTable data={stockData} clickedRow={data => setSelectedDate(data.date)}/>
-						{stockData.length > 1 ? <StockDataGraph data={stockData} selectedDate={selectedDate}/> : null}
-					</React.Fragment>
+				<React.Fragment>
+					{loggedIn ?
+						<React.Fragment>
+							<DateSelector setFrom={date => setFrom(date)} setTo={date => setTo(date)}/>
+							<br/>
+						</React.Fragment>
+						: 
+						<React.Fragment>
+							<Link to="/login">Log in to view historic data</Link>
+							<br/><br/>
+						</React.Fragment>
+					}
+
+					{error ?
+						<p>{error}</p>
+						:
+						<React.Fragment>
+							<StockDataTable data={stockData} clickedRow={data => setSelectedDate(data.date)}/>
+							{stockData.length > 1 ? <StockDataGraph data={stockData} selectedDate={selectedDate}/> : null}
+						</React.Fragment>
+					}
+				</React.Fragment>
 			}
 		</div>
 	);
